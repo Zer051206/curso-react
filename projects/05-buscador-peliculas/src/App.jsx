@@ -1,17 +1,38 @@
-import { useState, useEffect, useRef } from 'react'
+import './App.css'
+import { useCallback } from 'react'
+import { useState } from 'react'
 import { Movies } from './components/movies'
 import { useMovies } from './hooks/useMovies'
-import './App.css'
+import { useSearch } from './hooks/useSearch'
+import debounce from 'just-debounce-it'
 
 function App() {
-  const { movies } = useMovies() 
-  const inputRef = useRef()
+  const [sort, setSort] = useState(false)
+  const { search, updateSearch, error } = useSearch()
+  const { movies, loading, getMovies } = useMovies({ search, sort }) 
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedGetMovies = useCallback(
+  debounce((search) => {
+    console.log('search', search)
+    getMovies({ search })
+  }, 400)
+  , [getMovies]
+  )
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    const fields = new FormData(event.target)
-    const query = fields.get('query')
-    console.log(query)
+    getMovies({ search })
+  }
+
+  const handleSort = () => {
+    setSort(!sort)
+  }
+
+  const handleChange = (event) => {
+    const newSearch = event.target.value
+    updateSearch(newSearch)
+    debouncedGetMovies(newSearch)
   }
 
   return (
@@ -19,13 +40,17 @@ function App() {
       <header>
         <h1>Buscador de peliculas</h1>
         <form className='form' onSubmit={handleSubmit}>
-          <input name='query' ref={inputRef} placeholder='Avengers, Star wars, The Matrix... ' />
+          <input onChange={handleChange} value={search} name='query' placeholder='Avengers, Star wars, The Matrix... ' autoComplete='off' />
+          <input type='checkbox' onChange={handleSort} checked={sort}/>
           <button type='submit'>Search movie</button>
         </form>
+        {error && <p  style={{ color: 'red'}}>{error}</p>}
       </header>
 
       <main>
-          <Movies movies={movies} />
+        {
+          loading ? <p>Cargando...</p> : <Movies movies={movies} />
+        }
       </main>
     </div>
   )
