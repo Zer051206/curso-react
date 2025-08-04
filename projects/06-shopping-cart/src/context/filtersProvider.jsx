@@ -8,7 +8,7 @@ export function FiltersProvider({ children }) {
     category: 'all',
     minPrice: 0
   })
-  return (
+  return ( 
     <FiltersContext.Provider value={{
       filters,
       setFilters
