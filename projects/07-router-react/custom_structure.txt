@@ -1,0 +1,15 @@
+├── 📁 src
+│   ├── 📁 pages
+│   │   ├── 📄 about.jsx
+│   │   └── 📄 home.jsx
+│   ├── 📄 App.jsx
+│   ├── 📄 consts.js
+│   ├── 📄 main.jsx
+│   └── 📄 navigate.js
+├── 📄 custom_structure.txt
+├── 📄 eslint.config.js
+├── 📄 index.html
+├── 📄 package-lock.json
+├── 📄 package.json
+├── 📄 README.md
+└── 📄 vite.config.js
